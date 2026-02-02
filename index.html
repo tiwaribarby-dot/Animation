@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fluid Networks - Transition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    .page-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .fluid-networks-page {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1a365d 0%, #2c5282 50%, #1a365d 100%);
+      z-index: 10;
+      transition: filter 3s ease-in-out, opacity 4s ease-in-out;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .fluid-networks-page.blur-active {
+      filter: blur(15px);
+    }
+
+    .fluid-networks-page.fade-out {
+      opacity: 0;
+    }
+
+    .fn-header {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .fn-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .fn-logo-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #0066cc, #004499);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .fn-logo-icon::before {
+      content: "FN";
+      color: white;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .fn-logo-text {
+      font-size: 24px;
+      font-weight: 700;
+      color: #0066cc;
+    }
+
+    .fn-nav {
+      display: flex;
+      gap: 30px;
+    }
+
+    .fn-nav a {
+      color: #333;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+
+    .fn-hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="3" fill="rgba(255,255,255,0.08)"/><circle cx="40" cy="80" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+    }
+
+    .fn-hero h1 {
+      font-size: 48px;
+      color: white;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .fn-hero h1 span {
+      color: #64b5f6;
+    }
+
+    .fn-hero p {
+      font-size: 20px;
+      color: rgba(255,255,255,0.9);
+      max-width: 700px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    .fn-cta {
+      background: linear-gradient(135deg, #f7941d, #e67e00);
+      color: white;
+      padding: 15px 40px;
+      border-radius: 5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 14px;
+      letter-spacing: 1px;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(247, 148, 29, 0.4);
+    }
+
+    .fn-services {
+      background: rgba(255,255,255,0.95);
+      padding: 30px 60px;
+      display: flex;
+      justify-content: space-around;
+      gap: 20px;
+    }
+
+    .fn-service-item {
+      text-align: center;
+      flex: 1;
+    }
+
+    .fn-service-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #0066cc, #004499);
+      border-radius: 50%;
+      margin: 0 auto 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .fn-service-icon svg {
+      width: 30px;
+      height: 30px;
+      fill: white;
+    }
+
+    .fn-service-item h3 {
+      color: #0066cc;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .fn-service-item p {
+      color: #666;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .complete-page {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(180deg, #0a1628 0%, #1a2d4a 50%, #0a1628 100%);
+      z-index: 5;
+      opacity: 0;
+      transition: opacity 4s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .complete-page.fade-in {
+      opacity: 1;
+    }
+
+    .cp-header {
+      padding: 20px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10, 22, 40, 0.9);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .cp-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cp-logo-mark {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .cp-logo-mark::before {
+      content: "+";
+      color: white;
+      font-size: 24px;
+      font-weight: 300;
+    }
+
+    .cp-logo-text {
+      color: white;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .cp-nav {
+      display: flex;
+      gap: 35px;
+    }
+
+    .cp-nav a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .cp-hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cp-hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M45 5 L55 5 L55 15 L45 15 Z M5 45 L15 45 L15 55 L5 55 Z M85 45 L95 45 L95 55 L85 55 Z M45 85 L55 85 L55 95 L45 95 Z" fill="rgba(59,130,246,0.1)"/></svg>');
+      opacity: 0.5;
+    }
+
+    .cp-hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cp-hero h1 {
+      font-size: 52px;
+      color: white;
+      margin-bottom: 25px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      line-height: 1.2;
+    }
+
+    .cp-hero p {
+      font-size: 18px;
+      color: rgba(255,255,255,0.7);
+      max-width: 600px;
+      line-height: 1.7;
+      margin-bottom: 35px;
+    }
+
+    .cp-cta-group {
+      display: flex;
+      gap: 20px;
+    }
+
+    .cp-cta-primary {
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      color: white;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 15px;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+
+    .cp-cta-secondary {
+      background: transparent;
+      color: white;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 15px;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .cp-features {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      padding: 50px 60px;
+      background: rgba(255,255,255,0.02);
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .cp-feature {
+      text-align: center;
+      flex: 1;
+      max-width: 250px;
+    }
+
+    .cp-feature-icon {
+      width: 50px;
+      height: 50px;
+      background: rgba(59, 130, 246, 0.15);
+      border-radius: 12px;
+      margin: 0 auto 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .cp-feature-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: #3b82f6;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .cp-feature h3 {
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .cp-feature p {
+      color: rgba(255,255,255,0.6);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .transition-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .transition-message {
+      background: rgba(0, 0, 0, 0.85);
+      padding: 40px 60px;
+      border-radius: 16px;
+      text-align: center;
+      opacity: 0;
+      transform: scale(0.95);
+      animation: messageAppear 1s ease-out 0.5s forwards;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255,255,255,0.1);
+      max-width: 90%;
+    }
+
+    @keyframes messageAppear {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .transition-message h2 {
+      font-family: 'Inter', sans-serif;
+      font-size: 32px;
+      color: white;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 20px;
+    }
+
+    .transition-message h2 span {
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 15px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      width: 0%;
+      border-radius: 2px;
+      animation: progressAnimation 12s linear 1.5s forwards;
+    }
+
+    @keyframes progressAnimation {
+      to {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .fn-header, .cp-header {
+        padding: 15px 20px;
+      }
+
+      .fn-nav, .cp-nav {
+        display: none;
+      }
+
+      .fn-hero h1, .cp-hero h1 {
+        font-size: 28px;
+      }
+
+      .fn-hero p, .cp-hero p {
+        font-size: 16px;
+      }
+
+      .fn-services, .cp-features {
+        flex-direction: column;
+        padding: 20px;
+        gap: 25px;
+      }
+
+      .transition-message {
+        padding: 25px 30px;
+      }
+
+      .transition-message h2 {
+        font-size: 22px;
+      }
+
+      .cp-cta-group {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-container">
+    <div class="fluid-networks-page" id="fluidPage">
+      <header class="fn-header">
+        <div class="fn-logo">
+          <div class="fn-logo-icon"></div>
+          <span class="fn-logo-text">Fluid Networks</span>
+        </div>
+        <nav class="fn-nav">
+          <a href="#">Services</a>
+          <a href="#">Solutions</a>
+          <a href="#">About Us</a>
+          <a href="#">Contact</a>
+        </nav>
+      </header>
+      <section class="fn-hero">
+        <h1>Your business needs a <span>C.E.O.</span></h1>
+        <p>Cloud Enabled Office™ is our fully-integrated cloud technology solution. It enables any sized business to achieve elevated levels of productivity from a single holistic service.</p>
+        <a href="#" class="fn-cta">Go to the Cloud</a>
+      </section>
+      <section class="fn-services">
+        <div class="fn-service-item">
+          <div class="fn-service-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <h3>Managed IT Services</h3>
+          <p>24/7 proactive monitoring of your servers and systems</p>
+        </div>
+        <div class="fn-service-item">
+          <div class="fn-service-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Cyber Security</h3>
+          <p>Cutting-edge detection tools to keep you safe</p>
+        </div>
+        <div class="fn-service-item">
+          <div class="fn-service-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+          </div>
+          <h3>Data Backups</h3>
+          <p>Redundancy ensures your data is always available</p>
+        </div>
+        <div class="fn-service-item">
+          <div class="fn-service-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72"/></svg>
+          </div>
+          <h3>Business Communications</h3>
+          <p>Next-gen feature-rich communications platform</p>
+        </div>
+      </section>
+    </div>
+
+    <div class="complete-page" id="completePage">
+      <header class="cp-header">
+        <div class="cp-logo">
+          <div class="cp-logo-mark"></div>
+          <span class="cp-logo-text">Complete</span>
+        </div>
+        <nav class="cp-nav">
+          <a href="#">Managed IT</a>
+          <a href="#">Cybersecurity</a>
+          <a href="#">Compliance</a>
+          <a href="#">About</a>
+          <a href="#">Contact</a>
+        </nav>
+      </header>
+      <section class="cp-hero">
+        <div class="cp-hero-content">
+          <h1>Trusted Technology,<br>Proven Partnership.</h1>
+          <p>Seamless. Secure. Scaled. Bridge technology with business ambitions.</p>
+          <div class="cp-cta-group">
+            <a href="#" class="cp-cta-primary">Book a Meeting</a>
+            <a href="#" class="cp-cta-secondary">Learn More</a>
+          </div>
+        </div>
+      </section>
+      <section class="cp-features">
+        <div class="cp-feature">
+          <div class="cp-feature-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <h3>Strategic IT Guidance</h3>
+          <p>Expert advice aligned with your goals</p>
+        </div>
+        <div class="cp-feature">
+          <div class="cp-feature-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Industry Compliance</h3>
+          <p>Maintain compliance and protect client data</p>
+        </div>
+        <div class="cp-feature">
+          <div class="cp-feature-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <h3>Complete Coverage</h3>
+          <p>Access a team of experts who resolve issues fast</p>
+        </div>
+        <div class="cp-feature">
+          <div class="cp-feature-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+          </div>
+          <h3>Tailored Support</h3>
+          <p>Customized support and IT services</p>
+        </div>
+      </section>
+    </div>
+
+    <div class="transition-overlay">
+      <div class="transition-message">
+        <h2>Fluid Networks is becoming<br>your <span>Complete IT</span> provider!</h2>
+        <div class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const fluidPage = document.getElementById('fluidPage');
+      const completePage = document.getElementById('completePage');
+      const redirectUrl = 'https://complete.net';
+      const transitionDuration = 13500;
+      
+      setTimeout(function() {
+        fluidPage.classList.add('blur-active');
+      }, 2000);
+      
+      setTimeout(function() {
+        completePage.classList.add('fade-in');
+      }, 4000);
+      
+      setTimeout(function() {
+        fluidPage.classList.add('fade-out');
+      }, 6000);
+      
+      setTimeout(function() {
+        window.location.href = redirectUrl;
+      }, transitionDuration);
+    })();
+  </script>
+</body>
+</html>
